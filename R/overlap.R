@@ -24,7 +24,7 @@
 #'
 #' @param .method A string that specifies the method of analysis or a combination of
 #' methods. The \code{repOverlap} function supports following basic methods:
-#' "public", "overlap", "jaccard", "chao_jaccard", "tversky", "cosine", "morisita".
+#' "public", "overlap", "jaccard", "chao.jaccard", "tversky", "cosine", "morisita".
 #'
 #' @param .col A string that specifies the column(s) to be processed. Pass one of the
 #' following strings, separated by the plus sign: "nt" for nucleotide sequences,
@@ -231,16 +231,28 @@ chao_jaccard <- function(.x, .y) {
 chao_jaccard.default <- function(.x, .y) {
   .x <- collect(.x, n = Inf)
   .y <- collect(.y, n = Inf)
-  intersection <- nrow(dplyr::intersect(.x, .y))
-  proportion_of_x_in_y_counting_all_seqs <- intersection / nrow(.y)
-  proportion_of_y_in_x_counting_all_seqs <- intersection / nrow(.x)
+  .x_Merge <- within(.x, Merge <- paste(V.name, D.name, J.name, CDR3.aa, sep = "_"))
+  .y_Merge <- within(.y, Merge <- paste(V.name, D.name, J.name, CDR3.aa, sep = "_"))
+  .x_reads <- .x_Merge %>% tidyr::uncount(Clones)
+  .y_reads <- .y_Merge %>% tidyr::uncount(Clones)
+  .x_reads_M <- as_tibble(.x_reads$Merge)
+  .y_reads_M <- as_tibble(.y_reads$Merge)
+  intersection_reads <- nrow(dplyr::intersect(.x_reads_M, .y_reads_M))
+  proportion_of_x_in_y_counting_all_seqs <- intersection_reads / nrow(.y_reads_M)
+  proportion_of_y_in_x_counting_all_seqs <- intersection_reads / nrow(.x_reads_M)
   (proportion_of_x_in_y_counting_all_seqs * proportion_of_y_in_x_counting_all_seqs) / (proportion_of_x_in_y_counting_all_seqs + proportion_of_y_in_x_counting_all_seqs - (proportion_of_x_in_y_counting_all_seqs * proportion_of_y_in_x_counting_all_seqs))
 }
 
 chao_jaccard.character <- function(.x, .y) {
-  intersection <- nrow(dplyr::intersect(.x, .y))
-  proportion_of_x_in_y_counting_all_seqs <- intersection / nrow(.y)
-  proportion_of_y_in_x_counting_all_seqs <- intersection / nrow(.x)
+  .x_Merge <- within(.x, Merge <- paste(V.name, D.name, J.name, CDR3.aa, sep = "_"))
+  .y_Merge <- within(.y, Merge <- paste(V.name, D.name, J.name, CDR3.aa, sep = "_"))
+  .x_reads <- .x_Merge %>% tidyr::uncount(Clones)
+  .y_reads <- .y_Merge %>% tidyr::uncount(Clones)
+  .x_reads_M <- as_tibble(.x_reads$Merge)
+  .y_reads_M <- as_tibble(.y_reads$Merge)
+  intersection_reads <- nrow(dplyr::intersect(.x_reads_M, .y_reads_M))
+  proportion_of_x_in_y_counting_all_seqs <- intersection_reads / nrow(.y_reads_M)
+  proportion_of_y_in_x_counting_all_seqs <- intersection_reads / nrow(.x_reads_M)
   (proportion_of_x_in_y_counting_all_seqs * proportion_of_y_in_x_counting_all_seqs) / (proportion_of_x_in_y_counting_all_seqs + proportion_of_y_in_x_counting_all_seqs - (proportion_of_x_in_y_counting_all_seqs * proportion_of_y_in_x_counting_all_seqs))
 }
 
