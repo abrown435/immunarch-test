@@ -5,7 +5,7 @@ template:
     ganalytics: UA-128418614-2
     docsearch:
       api_key: '94207562f34b455c0796790d104e3549'
-      index_name: 'immunarch'
+      index_name: 'immunarch-test'
 authors:
   ImmunoMind:
     href: https://immunomind.io
