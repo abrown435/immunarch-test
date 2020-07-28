@@ -1,4 +1,4 @@
-Package: immunarch-test
+Package: immunarch
 Type: Package
 Title: Bioinformatics Analysis of T-Cell and B-Cell Immune Repertoires
 Version: 0.6.6
